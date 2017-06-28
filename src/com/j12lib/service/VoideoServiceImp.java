@@ -130,6 +130,7 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 	}
 
 	public int save(String sql) {
+		System.out.println(sql);
 		return this.update(sql);
 	}
 
