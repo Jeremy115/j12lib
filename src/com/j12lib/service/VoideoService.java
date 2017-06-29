@@ -28,7 +28,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int saveVoide(Map<String, Object> map);
+	public List<Map<String, Object>> saveVoide(Map<String, Object> map);
 
 	/**
 	 * 查询视频信息
@@ -36,7 +36,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int queryVoide(String videoCoding);
+	public List<Map<String, Object>> queryVoide(String videoCoding);
 
 	/**
 	 * 查询演员
@@ -47,7 +47,7 @@ public interface VoideoService {
 	 *           
 	 * @return
 	 */
-	public int queryCast(String name, int number);
+	public List<Map<String, Object>> queryCast(String name, int number);
 
 	/**
 	 * 添加演员
