@@ -1,4 +1,4 @@
-package com.j12lib.service;
+﻿package com.j12lib.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,7 +216,17 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 																			// 1：导演
 		System.out.println(video_cast);
 		System.out.println(video_genres);
-
+		for (int i = 0; i < video_genres.size(); i++) {
+			int item=	(int) video_genres.get(i);
+			String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number,) VALUES("+voideId+",0,"+item+",0)";
+			this.save(sql);
+		}
+		for (int i = 0; i < video_cast.size(); i++) {
+			int item=(int) video_cast.get(i);
+			String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number,) VALUES("+voideId+","+item+",0,1)";
+			this.save(sql);
+		}
+		
 		return "";
 
 	}
