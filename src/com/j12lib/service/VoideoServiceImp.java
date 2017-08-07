@@ -7,8 +7,6 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.j12lib.entity.VideosEntity;
-
 @Service("VoideoService")
 public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 
@@ -57,11 +55,7 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 		// String video_cast = (String) videosMap.get("video_cast");// 演员表
 
 		sql = "INSERT INTO tb_videos (video_title, video_code, videos_date, videos_length, video_label, video_maker, video_director, video_img)"
-				+ "VALUES('"
-				+ video_title
-				+ "',  '"
-				+ video_code
-				+ "',  '"
+				+ "VALUES('"+ video_title+ "',  '"+ video_code + "',  '"
 				+ videos_date
 				+ "',  '"
 				+ videos_length
@@ -98,7 +92,7 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 		List<Map<String, Object>> casts = this.queryForList(sql);
 		// casts[0].get("id")
 		if (casts.size() <= 0) {
-			int isok = saveCast(name, number);
+			int isok = this.saveCast(name, number);
 			if (isok >= 0) {
 				return this.queryCast(name, number);
 			}
@@ -116,35 +110,38 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 	}
 
 	@Override
-	public int querylabel(VideosEntity videosEntity) {
+	public int querylabel(Map<String, Object> videosEntity) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int savelabel(VideosEntity videosEntity) {
+	public int savelabel(Map<String, Object>  videosEntity) {
 		String sql = "";
 		return save(sql);
 	}
 
 	@Override
-	public int saveMaker(VideosEntity videosEntity) {
+	public int saveMaker(Map<String, Object>  videosEntity) {
 		String sql = "";
 		return save(sql);
 	}
 
 	@Override
-	public int queryMaker(VideosEntity videosEntity) {
+	public int queryMaker(Map<String, Object>  videosEntity) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	public int save(String sql) {
+	private int save(String sql) {
 		System.out.println(sql);
 		return this.update(sql);
 	}
+	private List<Map<String, Object>>  query(String sql) {
+		return this.queryForList(sql);
+	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private ArrayList setGenres(String genres) {
 		ArrayList genresArray = new ArrayList();
 				
@@ -169,6 +166,7 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 		return genresArray;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private ArrayList setCast(String castStr, int nuber) {
 		ArrayList castStrArray =new ArrayList();
 		List<Map<String, Object>> cast=null;
@@ -205,28 +203,35 @@ public class VoideoServiceImp extends JdbcTemplate implements VoideoService {
 		return id;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public String saveinfo(Map<String, Object> map) {
 		int voideId = this.voideId(map);// 视频id
-		System.out.println("视频id====" + voideId);
-
 		ArrayList video_genres = this.setGenres((String) map.get("video_genres"));
-		ArrayList video_cast = this.setCast((String) map.get("video_cast"), 0);// 演员表
-																			// 0：演员
-																			// 1：导演
-		System.out.println(video_cast);
-		System.out.println(video_genres);
+		ArrayList video_cast = this.setCast((String) map.get("video_cast"), 0);// 演员表   0：演员 1：导演
+	
 		for (int i = 0; i < video_genres.size(); i++) {
 			int item=	(int) video_genres.get(i);
-			String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number,) VALUES("+voideId+",0,"+item+",0)";
-			this.save(sql);
+			
+			List<Map<String, Object>> video_genresList=this.query("SELECT * FROM tb_video_cast WHERE videoId="+voideId+" and castId=0 and genreId="+item+" and number=0");
+			if(video_genresList.size()==0){
+				String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number) VALUES("+voideId+",0,"+item+",0)";
+				System.out.println(sql);
+				this.save(sql);
+			}
+		
 		}
 		for (int i = 0; i < video_cast.size(); i++) {
 			int item=(int) video_cast.get(i);
-			String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number,) VALUES("+voideId+","+item+",0,1)";
-			this.save(sql);
-		}
+			
+			List<Map<String, Object>> castList=this.query("SELECT * FROM tb_video_cast WHERE videoId="+voideId+" and genreId=0 and castId="+item+"  and number=1");
+			if(castList.size()==0){
+				String sql="INSERT INTO tb_video_cast(videoId,castId,genreId,number) VALUES("+voideId+","+item+",0,1)";
+				System.out.println(sql);
+				this.save(sql);
+			}
 		
+		}
 		return "";
 
 	}

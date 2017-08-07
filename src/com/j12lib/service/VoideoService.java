@@ -3,8 +3,6 @@ package com.j12lib.service;
 import java.util.List;
 import java.util.Map;
 
-import com.j12lib.entity.GenresEntity;
-import com.j12lib.entity.VideosEntity;
 
 public interface VoideoService {
 
@@ -66,7 +64,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int querylabel(VideosEntity videosEntity);
+	public int querylabel(Map<String, Object>  videosEntity);
 
 	/**
 	 * 发行商
@@ -74,7 +72,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int savelabel(VideosEntity videosEntity);
+	public int savelabel(Map<String, Object>  videosEntity);
 
 	/**
 	 * 添加制作商
@@ -82,7 +80,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int saveMaker(VideosEntity videosEntity);
+	public int saveMaker(Map<String, Object>  videosEntity);
 
 	/**
 	 * 查询制作商
@@ -90,7 +88,7 @@ public interface VoideoService {
 	 * @param videosEntity
 	 * @return
 	 */
-	public int queryMaker(VideosEntity videosEntity);
+	public int queryMaker(Map<String, Object>  videosEntity);
 	
 	public String saveinfo(Map<String, Object> map);
 }
